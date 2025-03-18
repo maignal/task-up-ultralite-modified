@@ -176,8 +176,9 @@ class TaskButton extends PanelMenu.Button {
     _updateDemandsAttention() {
         if (this._window?.demands_attention) {
             this._title.add_style_class_name('taskup-demands-attention');
+            this._box.set_opacity(255);
 
-            this._workspaceIndex.visible = true;
+            this._workspaceIndex.visible = Main.overview.visible || !this._windowIsOnActiveWorkspace;
             this.visible = true;
         } else {
             this._title.remove_style_class_name('taskup-demands-attention');
@@ -205,10 +206,10 @@ class TaskButton extends PanelMenu.Button {
         this._updateFocus();
         this._updateWorkspace();
 
-        let activeWorkspace = global.workspace_manager.get_active_workspace();
-        let windowIsOnActiveWorkspace = this._window?.located_on_workspace(activeWorkspace);
+        this._activeWorkspace = global.workspace_manager.get_active_workspace();
+        this._windowIsOnActiveWorkspace = this._window?.located_on_workspace(this._activeWorkspace);
 
-        this.visible = Main.overview.visible || (!this._window?.is_skip_taskbar() && windowIsOnActiveWorkspace);
+        this.visible = Main.overview.visible || (!this._window?.is_skip_taskbar() && this._windowIsOnActiveWorkspace);
     }
 
     _destroy() {
