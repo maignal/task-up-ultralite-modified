@@ -48,7 +48,7 @@ class TaskButton extends PanelMenu.Button {
             'hidden', this._updateVisibility.bind(this),
             this);
 
-        this._window.connectObject(
+        this._window?.connectObject(
             'notify::appears-focused', this._updateFocus.bind(this),
             'notify::demands-attention', this._updateDemandsAttention.bind(this),
             'notify::gtk-application-id', this._updateApp.bind(this), GObject.ConnectFlags.AFTER,
@@ -160,6 +160,8 @@ class TaskButton extends PanelMenu.Button {
 
     _updateWorkspace() {
         let workspaceIndex = this._window?.get_workspace().index() + 1;
+        this._activeWorkspace = global.workspace_manager.get_active_workspace();
+        this._windowIsOnActiveWorkspace = this._window?.located_on_workspace(this._activeWorkspace);
 
         this._workspaceIndex.set_text(workspaceIndex?.toString());
         this._workspaceIndex.visible = Main.overview.visible && !this._window?.on_all_workspaces;
@@ -204,9 +206,6 @@ class TaskButton extends PanelMenu.Button {
     _updateVisibility() {
         this._updateFocus();
         this._updateWorkspace();
-
-        this._activeWorkspace = global.workspace_manager.get_active_workspace();
-        this._windowIsOnActiveWorkspace = this._window?.located_on_workspace(this._activeWorkspace);
 
         this.visible = Main.overview.visible || (!this._window?.is_skip_taskbar() && this._windowIsOnActiveWorkspace);
     }
