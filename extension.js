@@ -30,7 +30,6 @@ class TaskButton extends PanelMenu.Button {
 
         this._updateApp();
         this._updateTitle();
-        this._updateWorkspace();
         this._updateVisibility();
 
         this._id = 'task-button-' + this._window;
