@@ -54,6 +54,7 @@ class TaskButton extends PanelMenu.Button {
             'notify::gtk-application-id', this._updateApp.bind(this), GObject.ConnectFlags.AFTER,
             'notify::skip-taskbar', this._updateVisibility.bind(this),
             'notify::title', this._updateTitle.bind(this),
+            'notify::urgent', () => this._updateDemandsAttention(),
             'notify::wm-class', this._updateApp.bind(this), GObject.ConnectFlags.AFTER,
             'unmanaging', this._destroy.bind(this),
             'workspace-changed', this._updatePosition.bind(this),
