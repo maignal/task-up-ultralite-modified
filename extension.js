@@ -151,10 +151,8 @@ class TaskButton extends PanelMenu.Button {
     _updatePosition() {
         let bin = this.container;
 
-        if (Main.panel._leftBox.get_children().includes(bin)) {
-            Main.panel._leftBox.remove_child(bin);
-            Main.panel._leftBox.insert_child_at_index(bin, this._getIndex());
-        }
+        if (Main.panel._leftBox.get_children().includes(bin))
+            Main.panel._leftBox.set_child_at_index(bin, this._getIndex());
 
         this._updateWorkspace();
     }
