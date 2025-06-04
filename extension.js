@@ -122,7 +122,7 @@ class TaskButton extends PanelMenu.Button {
     }
 
     _onHover() {
-        if (!Main.wm._canScroll)
+        if (Main.overview.visible || !Main.wm._canScroll)
             return;
 
         if (this.get_hover() && !this._window?.on_all_workspaces)
