@@ -114,7 +114,7 @@ class TaskButton extends PanelMenu.Button {
             this._window?.delete(global.get_current_time());
             // if (this._app?.can_open_new_window())
             //     this._app?.open_new_window(-1);
-            Main.overview.hide();
+            // Main.overview.hide();
 
             return Clutter.EVENT_STOP;
         }
@@ -290,6 +290,23 @@ class TaskBar extends GObject.Object {
     _connectSignals() {
         global.display.connectObject('window-created', (display, window) => this._makeTaskButton(window), this);
         // Main.panel.connectObject('scroll-event', (actor, event) => Main.wm.handleWorkspaceScroll(event), this);
+        Main.panel._leftBox.connectObject('scroll-event', (actor, event) => {
+            let direction = event.get_scroll_direction();
+            let workspaceManager = global.workspace_manager;
+            let activeIndex = workspaceManager.get_active_workspace_index();
+            let nWorkspaces = workspaceManager.n_workspaces;
+
+            if (direction === Clutter.ScrollDirection.UP) {
+                let newIndex = (activeIndex > 0) ? activeIndex - 1 : nWorkspaces - 1;
+                workspaceManager.get_workspace_by_index(newIndex).activate(global.get_current_time());
+                return Clutter.EVENT_STOP;
+            } else if (direction === Clutter.ScrollDirection.DOWN) {
+                let newIndex = (activeIndex + 1) % nWorkspaces;
+                workspaceManager.get_workspace_by_index(newIndex).activate(global.get_current_time());
+                return Clutter.EVENT_STOP;
+            }
+            return Clutter.EVENT_PROPAGATE;
+        }, this);
     }
 
     _disconnectSignals() {
