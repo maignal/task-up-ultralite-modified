@@ -13,7 +13,7 @@
   padding-right: 4px;
 }
 
-.taskup-workspace {
+/* .taskup-workspace {
   border: 1px solid rgba(255, 255, 255, 1);
   border-radius: 4px;
 
@@ -23,7 +23,7 @@
   padding-right: 4px;
 
   background-color: rgba(255, 255, 255, 0.2);
-}
+} */
 
 .taskup-demands-attention {
   color: rgba(233, 84, 32, 1);
