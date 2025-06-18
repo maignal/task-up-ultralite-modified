@@ -30,6 +30,7 @@ class TaskButton extends PanelMenu.Button {
 
         this._updateApp();
         this._updateTitle();
+        this._updateWorkspace();
         this._updateVisibility();
 
         this._id = 'task-button-' + this._window;
@@ -60,6 +61,7 @@ class TaskButton extends PanelMenu.Button {
             this);
 
         this.connectObject(
+            'notify::hover', this._onHover.bind(this),
             'button-press-event', (widget, event) => this._onClick(event),
             this);
     }
@@ -73,6 +75,10 @@ class TaskButton extends PanelMenu.Button {
     _makeButtonBox() {
         this._box = new St.BoxLayout();
         this._box.add_style_class_name('taskup-box');
+
+        // this._workspaceIndex = new St.Label({y_align: Clutter.ActorAlign.CENTER});
+        // this._workspaceIndex.add_style_class_name('taskup-workspace');
+        // this._box.add_child(this._workspaceIndex);
 
         this._icon = new St.Icon();
         this._icon.set_fallback_gicon(null);
@@ -106,11 +112,24 @@ class TaskButton extends PanelMenu.Button {
             this.menu.close();
             
             this._window?.delete(global.get_current_time());
+            // if (this._app?.can_open_new_window())
+            //     this._app?.open_new_window(-1);
+            // Main.overview.hide();
 
             return Clutter.EVENT_STOP;
         }
 
         return Clutter.EVENT_PROPAGATE;
+    }
+
+    _onHover() {
+        // if (!Main.wm._canScroll)
+        //     return;
+
+        // if (this.get_hover() && !this._window?.on_all_workspaces)
+        //     this._window?.raise();
+        // else
+        //     global.display.focus_window?.raise();
     }
 
     _getIndex() {
@@ -135,8 +154,17 @@ class TaskButton extends PanelMenu.Button {
 
         if (Main.panel._leftBox.get_children().includes(bin)) {
             Main.panel._leftBox.remove_child(bin);
+            // Main.panel._leftBox.insert_child_at_index(bin, this._getIndex());
         }
 
+        // this._updateWorkspace();
+    }
+
+    _updateWorkspace() {
+        // let workspaceIndex = this._window?.get_workspace().index() + 1;
+
+        // this._workspaceIndex.set_text(workspaceIndex?.toString());
+        // this._workspaceIndex.visible = Main.overview.visible && !this._window?.on_all_workspaces;
     }
 
     _updateFocus() {
@@ -151,6 +179,7 @@ class TaskButton extends PanelMenu.Button {
             this._title.add_style_class_name('taskup-demands-attention');
             this._box.set_opacity(255);
 
+            this._workspaceIndex.visible = Main.overview.visible || !this._windowIsOnActiveWorkspace;
             this.visible = true;
         } else {
             this._title.remove_style_class_name('taskup-demands-attention');
@@ -161,6 +190,7 @@ class TaskButton extends PanelMenu.Button {
 
     _updateTitle() {
         this._title.set_text(this._window?.get_title());
+        // this._title.set_text(this._app?.get_name() || '');
     }
 
     _updateApp() {
@@ -177,10 +207,12 @@ class TaskButton extends PanelMenu.Button {
 
     _updateVisibility() {
         this._updateFocus();
+        this._updateWorkspace();
 
         this._activeWorkspace = global.workspace_manager.get_active_workspace();
         this._windowIsOnActiveWorkspace = this._window?.located_on_workspace(this._activeWorkspace);
 
+        // this.visible = Main.overview.visible || (!this._window?.is_skip_taskbar() && this._windowIsOnActiveWorkspace);
         this.visible = (!this._window?.is_skip_taskbar() && this._windowIsOnActiveWorkspace);
     }
 
@@ -223,6 +255,8 @@ class TaskBar extends GObject.Object {
     }
 
     _makeTaskbar() {
+        this._moveDate(true);
+
         this._makeTaskbarTimeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
             let workspacesNumber = global.workspace_manager.n_workspaces;
 
@@ -239,9 +273,24 @@ class TaskBar extends GObject.Object {
         });
     }
 
+    _moveDate(active) {
+    //     let panel = Main.sessionMode.panel;
+
+    //     if (active) {
+    //         panel.center = panel.center.filter(item => item != 'dateMenu');
+    //         if (!panel.right.includes('dateMenu'))
+    //             panel.right.unshift('dateMenu');
+    //     } else {
+    //         panel.right = panel.right.filter(item => item != 'dateMenu');
+    //         panel.center.unshift('dateMenu');
+    //     }
+
+    //     Main.panel._updatePanel();
+    }
 
     _connectSignals() {
         global.display.connectObject('window-created', (display, window) => this._makeTaskButton(window), this);
+        // Main.panel.connectObject('scroll-event', (actor, event) => Main.wm.handleWorkspaceScroll(event), this);
         Main.panel._leftBox.connectObject('scroll-event', (actor, event) => {
             let direction = event.get_scroll_direction();
             let workspaceManager = global.workspace_manager;
@@ -269,6 +318,8 @@ class TaskBar extends GObject.Object {
     _destroy() {
         this._disconnectSignals();
         this._destroyTaskbar();
+
+        this._moveDate(false);
     }
 });
 
