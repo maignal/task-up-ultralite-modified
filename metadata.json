@@ -2,7 +2,7 @@
   "description": "GNOME extension that gives an overview of the windows in the current workspace as a list in the top bar",
   "name": "Task Up UltraLite Modified",
   "shell-version": ["46", "47", "48"],
-  "url": "https://github.com/maignal/task-up-ultralite-modified",
+  "url": "",
   "uuid": "task-up-ultralite-modified@maignal",
   "version": 1
 }
