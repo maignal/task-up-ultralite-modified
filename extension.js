@@ -76,8 +76,8 @@ class TaskButton extends PanelMenu.Button {
         this._box = new St.BoxLayout();
         this._box.add_style_class_name('taskup-box');
 
-        // this._workspaceIndex = new St.Label({y_align: Clutter.ActorAlign.CENTER});
-        // this._workspaceIndex.add_style_class_name('taskup-workspace');
+        this._workspaceIndex = new St.Label({y_align: Clutter.ActorAlign.CENTER});
+        this._workspaceIndex.add_style_class_name('taskup-workspace');
         // this._box.add_child(this._workspaceIndex);
 
         this._icon = new St.Icon();
@@ -154,17 +154,17 @@ class TaskButton extends PanelMenu.Button {
 
         if (Main.panel._leftBox.get_children().includes(bin)) {
             Main.panel._leftBox.remove_child(bin);
-            // Main.panel._leftBox.insert_child_at_index(bin, this._getIndex());
+            Main.panel._leftBox.insert_child_at_index(bin, this._getIndex());
         }
 
-        // this._updateWorkspace();
+        this._updateWorkspace();
     }
 
     _updateWorkspace() {
-        // let workspaceIndex = this._window?.get_workspace().index() + 1;
+        let workspaceIndex = this._window?.get_workspace().index() + 1;
 
-        // this._workspaceIndex.set_text(workspaceIndex?.toString());
-        // this._workspaceIndex.visible = Main.overview.visible && !this._window?.on_all_workspaces;
+        this._workspaceIndex.set_text(workspaceIndex?.toString());
+        this._workspaceIndex.visible = Main.overview.visible && !this._window?.on_all_workspaces;
     }
 
     _updateFocus() {
